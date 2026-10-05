@@ -69,13 +69,18 @@ with right:
 
         if submit:
             user = authenticate(email, password)
-            if user:
-                login_into_session(user)
-                if remember:
-                    remember_user(user["id"], cookies)
-                st.switch_page("pages/01_Dashboard.py")
-            else:
-                st.error("Incorrect email or password.")
+
+        if user:
+            login_into_session(user)
+
+            if remember:
+                remember_user(user["id"], cookies)
+
+            st.session_state["login_success"] = True
+            st.switch_page("pages/01_Dashboard.py")
+
+        else:
+            st.error("Incorrect email or password.")
 
     with register_tab:
         with st.form("register_form"):
