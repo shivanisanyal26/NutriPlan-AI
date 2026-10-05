@@ -16,6 +16,8 @@ init_db()
 cookies = get_cookie_manager()
 if not cookies.ready():
     st.stop()
+if "logged_out" in st.session_state:
+    st.session_state.pop("logged_out")
 
 # Restore remembered login before showing the login screen.
 # Do not restore the previous cookie immediately after logout.
@@ -70,17 +72,17 @@ with right:
         if submit:
             user = authenticate(email, password)
 
-        if user:
-            login_into_session(user)
+            if user:
+                login_into_session(user)
 
-            if remember:
-                remember_user(user["id"], cookies)
+                if remember:
+                    remember_user(user["id"], cookies)
 
-            st.session_state["login_success"] = True
-            st.switch_page("pages/01_Dashboard.py")
+                st.session_state["login_success"] = True
+                st.switch_page("pages/01_Dashboard.py")
 
-        else:
-            st.error("Incorrect email or password.")
+            else:
+                st.error("Incorrect email or password.")
 
     with register_tab:
         with st.form("register_form"):
